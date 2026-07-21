@@ -1,0 +1,657 @@
+{% extends "templates/web.html" %}
+
+{% block page_content %}
+<div class="cpage-root-wrapper">
+	{% if pages_list %}
+		<!-- Index/Directory View -->
+		<div class="cpage-directory-container">
+			<header class="directory-header animate-fade-in">
+				<span class="badge">Builder System</span>
+				<h1>Custom Web Pages Directory</h1>
+				<p>Explore dynamic layouts, custom components, and interactive templates built on the Custom Web Page builder.</p>
+			</header>
+
+			<!-- Search Bar -->
+			<div class="search-wrapper animate-fade-in">
+				<svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+				</svg>
+				<input type="text" id="directory-search" placeholder="Search pages by title..." onkeyup="filterPages()">
+			</div>
+
+			<!-- Grid of Pages -->
+			<div class="pages-grid" id="pages-grid">
+				{% if pages_list | length == 0 %}
+					<div class="empty-state">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="empty-icon">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V4a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+						</svg>
+						<h3>No Pages Found</h3>
+						<p>Get started by creating a new Custom Web Page in the Desk dashboard.</p>
+					</div>
+				{% else %}
+					{% for doc in pages_list %}
+						<a href="/custom-web-page/{{ doc.name }}" class="page-card animate-scale-up" style="animation-delay: {{ loop.index0 * 0.05 }}s;">
+							<div class="card-glow"></div>
+							<div class="card-content">
+								<span class="card-meta">Custom Web Page</span>
+								<h3 class="card-title">{{ doc.title }}</h3>
+								<div class="card-footer">
+									<span class="view-link">
+										View Page 
+										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="arrow-icon">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+										</svg>
+									</span>
+								</div>
+							</div>
+						</a>
+					{% endfor %}
+				{% endif %}
+			</div>
+		</div>
+	{% else %}
+		<!-- Specific Page View with dynamic sub-pages -->
+		<div class="builder-page-wrapper">
+			<!-- Page Header -->
+			<div class="page-title-header">
+				<svg class="title-logo" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+				</svg>
+				<h2>{{ title }}</h2>
+			</div>
+
+			<!-- Dynamic Top Navbar (For Horizontal Tabs) -->
+			{% set horiz_pages = pages | selectattr("tab_type", "equalto", "Horizontal") | list %}
+			{% if horiz_pages | length > 0 %}
+				<nav class="custom-navbar">
+					<div class="navbar-container">
+						<div class="navbar-brand">
+							<span>Horizontal Sections</span>
+						</div>
+						<!-- Navigation links -->
+						<div class="navbar-links" id="navbar-links-horiz">
+							{% for row in pages %}
+								{% if row.tab_type == "Horizontal" %}
+									<button class="navbar-link" id="nav-link-{{ loop.index }}" onclick="activateSection({{ loop.index }})">
+										{{ row.page_title }}
+									</button>
+								{% endif %}
+							{% endfor %}
+						</div>
+					</div>
+				</nav>
+			{% endif %}
+
+			<!-- Two Column Layout for Vertical Tabs sidebar & content -->
+			<div class="viewport-wrapper">
+				{% set vert_pages = pages | selectattr("tab_type", "equalto", "Vertical") | list %}
+				{% if vert_pages | length > 0 %}
+					<!-- Sidebar Column (For Vertical Tabs) -->
+					<aside class="vertical-sidebar">
+						<div class="sidebar-header">
+							<span>Vertical Sections</span>
+						</div>
+						<div class="sidebar-links">
+							{% for row in pages %}
+								{% if row.tab_type == "Vertical" %}
+									<button class="sidebar-link" id="nav-link-{{ loop.index }}" onclick="activateSection({{ loop.index }})">
+										{{ row.page_title }}
+									</button>
+								{% endif %}
+							{% endfor %}
+						</div>
+					</aside>
+				{% endif %}
+
+				<!-- Active Section Content Viewport -->
+				<main class="sections-viewport">
+					{% for row in pages %}
+						<div id="section-{{ loop.index }}" class="section-content animate-fade-in-up">
+							<div class="section-inner-wrapper">
+								{{ row.content | safe }}
+							</div>
+						</div>
+					{% endfor %}
+				</main>
+			</div>
+		</div>
+
+		<!-- Dynamic Style Target Block -->
+		<style id="dynamic-style"></style>
+	{% endif %}
+</div>
+
+<!-- Page Base CSS Styling -->
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+	:root {
+		--cpage-bg: #0b0f19;
+		--cpage-surface: #131b2e;
+		--cpage-border: rgba(255, 255, 255, 0.08);
+		--cpage-text: #f3f4f6;
+		--cpage-text-muted: #9ca3af;
+		--cpage-primary: #3b82f6;
+		--cpage-primary-hover: #60a5fa;
+		--cpage-primary-rgb: 59, 130, 246;
+		--cpage-glass: rgba(19, 27, 46, 0.7);
+	}
+
+	.cpage-root-wrapper {
+		font-family: 'Outfit', sans-serif;
+		background: var(--cpage-bg);
+		color: var(--cpage-text);
+		min-height: 80vh;
+		padding: 2rem 1rem;
+		position: relative;
+		overflow: hidden;
+	}
+
+	/* Directory Styling */
+	.cpage-directory-container {
+		max-width: 1000px;
+		margin: 0 auto;
+		position: relative;
+		z-index: 2;
+	}
+
+	.directory-header {
+		text-align: center;
+		margin-bottom: 3rem;
+	}
+
+	.badge {
+		background: rgba(5b, 130, 246, 0.15);
+		color: var(--cpage-primary-hover);
+		padding: 0.4rem 0.8rem;
+		border-radius: 9999px;
+		font-size: 0.8rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		border: 1px solid rgba(5b, 130, 246, 0.3);
+		display: inline-block;
+		margin-bottom: 1rem;
+	}
+
+	.directory-header h1 {
+		font-size: 3rem;
+		font-weight: 700;
+		margin-bottom: 1rem;
+		background: linear-gradient(135deg, #ffffff 30%, #90b8f8 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+
+	.directory-header p {
+		color: var(--cpage-text-muted);
+		font-size: 1.15rem;
+		max-width: 600px;
+		margin: 0 auto;
+	}
+
+	/* Search Bar */
+	.search-wrapper {
+		position: relative;
+		max-width: 500px;
+		margin: 0 auto 3rem auto;
+	}
+
+	.search-icon {
+		position: absolute;
+		left: 1rem;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 1.25rem;
+		height: 1.25rem;
+		color: var(--cpage-text-muted);
+	}
+
+	#directory-search {
+		width: 100%;
+		padding: 0.8rem 1rem 0.8rem 2.8rem;
+		background: var(--cpage-surface);
+		border: 1px solid var(--cpage-border);
+		border-radius: 12px;
+		color: var(--cpage-text);
+		font-size: 1rem;
+		transition: all 0.3s ease;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+	}
+
+	#directory-search:focus {
+		border-color: var(--cpage-primary);
+		outline: none;
+		box-shadow: 0 0 0 3px rgba(var(--cpage-primary-rgb), 0.25);
+	}
+
+	/* Cards Grid */
+	.pages-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.page-card {
+		position: relative;
+		background: var(--cpage-surface);
+		border: 1px solid var(--cpage-border);
+		border-radius: 16px;
+		padding: 1.5rem;
+		text-decoration: none !important;
+		color: var(--cpage-text) !important;
+		overflow: hidden;
+		transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+		display: block;
+		box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	}
+
+	.page-card:hover {
+		transform: translateY(-6px);
+		border-color: rgba(var(--cpage-primary-rgb), 0.4);
+		box-shadow: 0 10px 30px rgba(var(--cpage-primary-rgb), 0.15);
+	}
+
+	.card-glow {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: radial-gradient(circle at top right, rgba(var(--cpage-primary-rgb), 0.15), transparent 60%);
+		opacity: 0;
+		transition: opacity 0.4s ease;
+		pointer-events: none;
+	}
+
+	.page-card:hover .card-glow {
+		opacity: 1;
+	}
+
+	.card-meta {
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--cpage-primary-hover);
+		font-weight: 600;
+	}
+
+	.card-title {
+		font-size: 1.35rem;
+		font-weight: 600;
+		margin-top: 0.5rem;
+		margin-bottom: 2rem;
+	}
+
+	.card-footer {
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	.view-link {
+		font-size: 0.9rem;
+		font-weight: 500;
+		color: var(--cpage-text-muted);
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		transition: color 0.3s ease;
+	}
+
+	.page-card:hover .view-link {
+		color: var(--cpage-primary-hover);
+	}
+
+	.arrow-icon {
+		width: 1rem;
+		height: 1rem;
+		transition: transform 0.3s ease;
+	}
+
+	.page-card:hover .arrow-icon {
+		transform: translateX(4px);
+	}
+
+	.empty-state {
+		grid-column: 1 / -1;
+		text-align: center;
+		padding: 4rem 2rem;
+		background: var(--cpage-surface);
+		border: 1px dashed var(--cpage-border);
+		border-radius: 16px;
+	}
+
+	.empty-icon {
+		width: 4rem;
+		height: 4rem;
+		color: var(--cpage-text-muted);
+		margin: 0 auto 1.5rem auto;
+		opacity: 0.5;
+	}
+
+	/* Builder Page View */
+	.builder-page-wrapper {
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+
+	.page-title-header {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		margin-bottom: 1.5rem;
+		padding-left: 0.5rem;
+	}
+
+	.page-title-header h2 {
+		font-size: 1.85rem;
+		font-weight: 700;
+		margin: 0;
+		background: linear-gradient(135deg, #ffffff, #90b8f8);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+
+	.title-logo {
+		width: 2rem;
+		height: 2rem;
+		color: var(--cpage-primary-hover);
+	}
+
+	/* Top Navbar for Horizontal Tabs */
+	.custom-navbar {
+		background: var(--cpage-glass);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid var(--cpage-border);
+		border-radius: 16px;
+		padding: 0.75rem 1.5rem;
+		margin-bottom: 1.5rem;
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+	}
+
+	.navbar-container {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.navbar-brand {
+		font-size: 0.82rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--cpage-primary-hover);
+		font-weight: 700;
+	}
+
+	.navbar-links {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.navbar-link {
+		background: transparent;
+		border: none;
+		color: var(--cpage-text-muted);
+		padding: 0.5rem 1rem;
+		border-radius: 10px;
+		font-size: 0.92rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	.navbar-link:hover {
+		color: var(--cpage-text);
+		background: rgba(255, 255, 255, 0.05);
+	}
+
+	.navbar-link.active {
+		color: var(--cpage-text) !important;
+		background: var(--cpage-primary);
+		box-shadow: 0 4px 15px rgba(var(--cpage-primary-rgb), 0.4);
+	}
+
+	/* Two-column layout */
+	.viewport-wrapper {
+		display: flex;
+		gap: 2rem;
+	}
+
+	/* Sidebar Navbar for Vertical Tabs */
+	.vertical-sidebar {
+		flex: 0 0 240px;
+		background: var(--cpage-glass);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid var(--cpage-border);
+		border-radius: 16px;
+		padding: 1.25rem 1rem;
+		height: fit-content;
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.sidebar-header {
+		font-size: 0.78rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--cpage-primary-hover);
+		font-weight: 700;
+		padding-left: 0.5rem;
+	}
+
+	.sidebar-links {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+	}
+
+	.sidebar-link {
+		background: transparent;
+		border: none;
+		color: var(--cpage-text-muted);
+		padding: 0.6rem 1rem;
+		border-radius: 10px;
+		font-size: 0.92rem;
+		font-weight: 600;
+		text-align: left;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		display: block;
+		width: 100%;
+	}
+
+	.sidebar-link:hover {
+		color: var(--cpage-text);
+		background: rgba(255, 255, 255, 0.05);
+	}
+
+	.sidebar-link.active {
+		color: var(--cpage-text) !important;
+		background: var(--cpage-primary);
+		box-shadow: 0 4px 15px rgba(var(--cpage-primary-rgb), 0.4);
+	}
+
+	/* Content Viewport */
+	.sections-viewport {
+		flex: 1;
+		position: relative;
+		min-height: 50vh;
+	}
+
+	.section-content {
+		display: none;
+		border-radius: 20px;
+		background: var(--cpage-surface);
+		border: 1px solid var(--cpage-border);
+		padding: 2.5rem;
+		box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+	}
+
+	.section-content.active {
+		display: block;
+	}
+
+	/* Animations */
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(15px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes fadeIn {
+		from { opacity: 0; }
+		to { opacity: 1; }
+	}
+
+	@keyframes scaleUp {
+		from {
+			opacity: 0;
+			transform: scale(0.97);
+		}
+		to {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
+	.animate-fade-in-up {
+		animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	}
+
+	.animate-fade-in {
+		animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	}
+
+	.animate-scale-up {
+		animation: scaleUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+		animation-fill-mode: both;
+	}
+
+	/* Responsive viewport */
+	@media (max-width: 768px) {
+		.viewport-wrapper {
+			flex-direction: column;
+		}
+
+		.vertical-sidebar {
+			flex: none;
+			width: 100%;
+		}
+
+		.sidebar-link {
+			text-align: center;
+		}
+
+		.section-content {
+			padding: 1.5rem;
+		}
+	}
+</style>
+
+<!-- Page Loader Script -->
+{% if not pages_list %}
+<script>
+	const pageSections = [
+		{% for row in pages %}
+		{
+			index: {{ loop.index }},
+			title: {{ row.page_title | tojson }},
+			css: {{ (row.css or "") | tojson }},
+			js: {{ (row.js or "") | tojson }}
+		}{% if not loop.last %},{% endif %}
+		{% endfor %}
+	];
+
+	function activateSection(index) {
+		// Hide all content blocks
+		document.querySelectorAll('.section-content').forEach(el => {
+			el.classList.remove('active');
+			el.style.display = 'none';
+		});
+		
+		// Show active content block
+		const targetSection = document.getElementById(`section-${index}`);
+		if (targetSection) {
+			targetSection.classList.add('active');
+			targetSection.style.display = 'block';
+		}
+		
+		// Clear and mark active class for Horizontal links
+		document.querySelectorAll('.navbar-link').forEach(el => {
+			el.classList.remove('active');
+		});
+		const horizLink = document.getElementById(`nav-link-${index}`);
+		if (horizLink) {
+			horizLink.classList.add('active');
+		}
+
+		// Clear and mark active class for Vertical links
+		document.querySelectorAll('.sidebar-link').forEach(el => {
+			el.classList.remove('active');
+		});
+		const vertLink = document.getElementById(`nav-link-${index}`);
+		if (vertLink) {
+			vertLink.classList.add('active');
+		}
+
+		// Inject section style sheet
+		const section = pageSections.find(s => s.index == index);
+		const styleEl = document.getElementById('dynamic-style');
+		if (styleEl && section) {
+			styleEl.textContent = section.css || '';
+		}
+
+		// Inject section script code inside IIFE scope
+		const oldScript = document.getElementById('dynamic-script');
+		if (oldScript) {
+			oldScript.remove();
+		}
+		
+		if (section && section.js) {
+			const newScript = document.createElement('script');
+			newScript.id = 'dynamic-script';
+			newScript.textContent = `(function() {
+				try {
+					${section.js}
+				} catch (e) {
+					console.error("Error executing custom JS for section '${section.title}':", e);
+				}
+			})();`;
+			document.body.appendChild(newScript);
+		}
+	}
+
+	document.addEventListener('DOMContentLoaded', () => {
+		if (pageSections.length > 0) {
+			activateSection(1);
+		}
+	});
+</script>
+{% else %}
+<script>
+	function filterPages() {
+		const searchInput = document.getElementById('directory-search').value.toLowerCase();
+		const cards = document.querySelectorAll('.page-card');
+		
+		cards.forEach(card => {
+			const title = card.querySelector('.card-title').textContent.toLowerCase();
+			if (title.includes(searchInput)) {
+				card.style.display = 'block';
+			} else {
+				card.style.display = 'none';
+			}
+		});
+	}
+</script>
+{% endif %}
+{% endblock %}
