@@ -247,8 +247,3 @@ app_license = "mit"
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
 
-website_route_rules = [
-	{"from_route": "/custom-web-page/<name>", "to_route": "cpage"},
-	{"from_route": "/cpage/<name>", "to_route": "cpage"}
-]
-
