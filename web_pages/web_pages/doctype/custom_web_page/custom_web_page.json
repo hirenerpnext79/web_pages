@@ -10,6 +10,7 @@
   "main_title",
   "image",
   "content",
+  "css",
   "tabs",
   "section"
  ],
@@ -24,7 +25,7 @@
   },
   {
    "fieldname": "content",
-   "fieldtype": "Text Editor",
+   "fieldtype": "HTML Editor",
    "label": "Content"
   },
   {
@@ -51,12 +52,17 @@
    "fieldtype": "Table",
    "label": "Section",
    "options": "Web Page Section"
+  },
+  {
+   "fieldname": "css",
+   "fieldtype": "Code",
+   "label": "CSS"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-23 14:55:35.696887",
- "modified_by": "Administrator",
+ "modified": "2026-07-25 12:22:35.622398",
+ "modified_by": "hirenerpnext79@gmail.com",
  "module": "Web Pages",
  "name": "Custom Web Page",
  "naming_rule": "By fieldname",
