@@ -30,15 +30,17 @@ def get_custom_web_pages(name=None):
 
 	doc = frappe.get_doc("Custom Web Page", name)
 	sorted_tabs = sorted(doc.tabs, key=lambda t: (t.sort_order or 0, t.idx))
-	sorted_sections = sorted(doc.get("section") or [], key=lambda s: (s.sort_order or 0, s.idx))
+	sorted_sections = sorted(doc.section or [], key=lambda s: (s.sort_order or 0, s.idx))
 	
 	return {
 		"name": doc.name,
 		"title": doc.title,
-		"main_title": doc.get("main_title"),
-		"main_image": doc.get("main_image") or doc.get("image"),
+		"main_title": doc.main_title,
+		"main_image": doc.get("main_image") or doc.image,
 		"video_url": doc.get("video_url"),
 		"content": fully_unescape(doc.content),
+		"css": fully_unescape(doc.css),
+		"js": fully_unescape(doc.get("js") or ""),
 		"tabs": [{
 			"page_title": tab.page_title,
 			"tab_type": tab.tab_type or "Horizontal",
@@ -46,34 +48,47 @@ def get_custom_web_pages(name=None):
 			"sort_order": tab.sort_order or 0,
 			"video_url": tab.get("video_url"),
 			"content": fully_unescape(tab.content),
-			"css": tab.css
+			"css": tab.css,
+			"js": fully_unescape(tab.get("js") or "")
 		} for tab in sorted_tabs],
 		"sections": [{
 			"page_title": sec.page_title,
-			"image": sec.get("image"),
+			"image": sec.image,
 			"video_url": sec.get("video_url"),
 			"sort_order": sec.sort_order or 0,
 			"content": fully_unescape(sec.content),
-			"css": sec.css
+			"css": sec.css,
+			"js": fully_unescape(sec.get("js") or "")
 		} for sec in sorted_sections]
 	}
 
 @frappe.whitelist(allow_guest=True)
-def get_menu_tree(menu_name=None):
+def get_menu_tree(menu_name=None, menu_type=None):
 	if not menu_name:
-		menu = frappe.get_all("Menu Management", filters={"is_active": 1}, limit=1) or \
-			   frappe.get_all("Menu Management", limit=1)
+		filters = {"is_active": 1}
+		if menu_type:
+			filters["menu_type"] = menu_type
+		menu = frappe.get_all("Menu Management", filters=filters, limit=1)
+		if not menu and menu_type:
+			menu = frappe.get_all("Menu Management", filters={"menu_type": menu_type}, limit=1)
+		if not menu:
+			menu = frappe.get_all("Menu Management", filters={"is_active": 1}, limit=1) or \
+				   frappe.get_all("Menu Management", limit=1)
 		if not menu:
 			return [{"label": "Home", "page_url": "#/"}]
 		menu_name = menu[0].name
 
 	if not frappe.db.exists("Menu Management", menu_name):
-		return [{"label": "Home", "page_url": "#/"}]
+		return [] if menu_type == "Footer" else [{"label": "Home", "page_url": "#/"}]
 
 	doc = frappe.get_doc("Menu Management", menu_name)
-	tree = [{"label": "Home", "page_url": "#/", "children": []}]
+	
+	if not doc.is_active:
+		return [] if menu_type == "Footer" else [{"label": "Home", "page_url": "#/"}]
+		
+	tree = [] if menu_type == "Footer" else [{"label": "Home", "page_url": "#/", "children": []}]
 	nodes = {}
-
+	
 	for item in doc.menu_items:
 		slug = slugify(item.page_link or item.label)
 		nodes[item.label] = {
@@ -91,6 +106,14 @@ def get_menu_tree(menu_name=None):
 		else:
 			tree.append(node)
 
+	if menu_type == "Footer":
+		return {
+			"menu_items": tree,
+			"left_side_content": doc.get("left_side_content") or "",
+			"right_side_content": doc.get("right_side_content") or "",
+			"css": doc.get("css") or ""
+		}
+
 	return tree
 
 @frappe.whitelist(allow_guest=True)
@@ -99,3 +122,19 @@ def get_active_slider():
 	if active_slider:
 		return frappe.get_doc("Banner Slider", active_slider[0].name).as_dict()
 	return None
+
+@frappe.whitelist(allow_guest=True)
+def submit_contact_form(name, email, subject, message):
+	try:
+		doc = frappe.get_doc({
+			"doctype": "Get in Touch with Us",
+			"full_name": name,
+			"email": email,
+			"subject": subject,
+			"message": message
+		})
+		doc.insert(ignore_permissions=True)
+		return {"status": "success", "message": "Message saved to Get in Touch with Us."}
+	except Exception as e:
+		frappe.log_error(title="Contact Form Error", message=frappe.get_traceback())
+		return {"status": "error", "message": str(e)}

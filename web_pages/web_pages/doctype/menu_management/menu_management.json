@@ -8,7 +8,11 @@
  "engine": "InnoDB",
  "field_order": [
   "menu_name",
+  "menu_type",
   "is_active",
+  "left_side_content",
+  "right_side_content",
+  "css",
   "menu_items"
  ],
  "fields": [
@@ -21,6 +25,14 @@
    "unique": 1
   },
   {
+   "default": "Header",
+   "fieldname": "menu_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Menu Type",
+   "options": "Header\nFooter"
+  },
+  {
    "fieldname": "menu_items",
    "fieldtype": "Table",
    "label": "Menu Items",
@@ -31,13 +43,31 @@
    "fieldname": "is_active",
    "fieldtype": "Check",
    "label": "Is Active"
+  },
+  {
+   "depends_on": "eval:doc.menu_type == \"Footer\"",
+   "fieldname": "left_side_content",
+   "fieldtype": "HTML Editor",
+   "label": "Left Side Content"
+  },
+  {
+   "depends_on": "eval:doc.menu_type == \"Footer\"",
+   "fieldname": "right_side_content",
+   "fieldtype": "HTML Editor",
+   "label": "Right Side Content"
+  },
+  {
+   "depends_on": "eval:doc.menu_type == \"Footer\"",
+   "fieldname": "css",
+   "fieldtype": "Code",
+   "label": "CSS"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-22 17:02:46.171403",
- "modified_by": "hns@gmail.com",
+ "modified": "2026-07-25 12:19:22.261543",
+ "modified_by": "hirenerpnext79@gmail.com",
  "module": "Web Pages",
  "name": "Menu Management",
  "naming_rule": "By fieldname",

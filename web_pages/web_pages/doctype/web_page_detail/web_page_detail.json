@@ -23,7 +23,7 @@
   },
   {
    "fieldname": "content",
-   "fieldtype": "Text Editor",
+   "fieldtype": "HTML Editor",
    "label": "Content",
    "reqd": 1
   },
@@ -63,8 +63,8 @@
  ],
  "istable": 1,
  "links": [],
- "modified": "2026-07-21 12:01:39.465464",
- "modified_by": "hns@gmail.com",
+ "modified": "2026-07-25 12:23:19.913112",
+ "modified_by": "hirenerpnext79@gmail.com",
  "module": "Web Pages",
  "name": "Web Page Detail",
  "owner": "Administrator",
