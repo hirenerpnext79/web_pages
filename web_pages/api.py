@@ -21,14 +21,16 @@ def fully_unescape(text: str) -> str:
 def get_custom_web_pages(name=None):
 	try:
 		if not name:
-			return frappe.get_all("Custom Web Page", fields=["name", "title"])
+			return frappe.get_all("Custom Web Page", fields=["name", "title", "route"])
 
-		if not frappe.db.exists("Custom Web Page", name):
+		matched_route = frappe.get_all("Custom Web Page", filters={"route": name}, fields=["name"], limit=1)
+		if matched_route:
+			name = matched_route[0].name
+		elif not frappe.db.exists("Custom Web Page", name):
 			matched = frappe.get_all("Custom Web Page", fields=["name"])
 			name = next((p.name for p in matched if slugify(p.name) == name), None)
 			if not name:
 				return {}
-
 		doc = frappe.get_doc("Custom Web Page", name)
 		sorted_tabs = sorted(doc.tabs, key=lambda t: (t.sort_order or 0, t.idx))
 		sorted_sections = sorted(doc.section or [], key=lambda s: (s.sort_order or 0, s.idx))
@@ -36,12 +38,11 @@ def get_custom_web_pages(name=None):
 		return {
 			"name": doc.name,
 			"title": doc.title,
+			"route": doc.route,
 			"main_title": doc.main_title,
-			"main_image": doc.main_image or doc.image,
-			"video_url": doc.video_url,
+			"image": doc.image,
 			"content": fully_unescape(doc.content),
 			"css": fully_unescape(doc.css),
-			"js": fully_unescape(doc.js or ""),
 			"tabs": [{
 				"page_title": tab.page_title,
 				"tab_type": tab.tab_type or "Horizontal",
@@ -50,7 +51,6 @@ def get_custom_web_pages(name=None):
 				"video_url": tab.video_url,
 				"content": fully_unescape(tab.content),
 				"css": tab.css,
-				"js": fully_unescape(tab.js or "")
 			} for tab in sorted_tabs],
 			"sections": [{
 				"page_title": sec.page_title,

@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "title",
+  "route",
   "main_title",
   "image",
   "content",
@@ -57,11 +58,19 @@
    "fieldname": "css",
    "fieldtype": "Code",
    "label": "CSS"
+  },
+  {
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Route",
+   "reqd": 1,
+   "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-25 12:22:35.622398",
+ "modified": "2026-07-25 18:24:56.456226",
  "modified_by": "hirenerpnext79@gmail.com",
  "module": "Web Pages",
  "name": "Custom Web Page",
