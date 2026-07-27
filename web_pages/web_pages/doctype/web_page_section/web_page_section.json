@@ -22,12 +22,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "content",
-   "fieldtype": "HTML Editor",
-   "label": "Content",
-   "reqd": 1
-  },
-  {
    "fieldname": "css",
    "fieldtype": "Code",
    "label": "CSS"
@@ -52,13 +46,18 @@
    "fieldname": "js",
    "fieldtype": "Code",
    "label": "JS"
+  },
+  {
+   "fieldname": "content",
+   "fieldtype": "HTML Editor",
+   "label": "Content"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-07-27 11:20:03.893445",
+ "modified": "2026-07-27 13:35:36.691234",
  "modified_by": "hirenerpnext79@gmail.com",
  "module": "Web Pages",
  "name": "Web Page Section",

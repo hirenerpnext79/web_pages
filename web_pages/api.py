@@ -77,6 +77,7 @@ def get_custom_web_pages(name=None):
 			"name": doc.name,
 			"title": doc.title,
 			"route": doc.route,
+			"banner_slider": doc.banner_slider,
 			"main_title": doc.main_title,
 			"image": doc.image,
 			"content": fully_unescape(doc.content),
@@ -105,14 +106,14 @@ def get_menu_tree(menu_name=None, menu_type=None):
 				menu_name = frappe.db.get_value("Menu Management", {}, "name", order_by="is_active desc, modified desc")
 
 			if not menu_name:
-				return [] if menu_type == "Footer" else [{"label": "Home", "page_url": "#/"}]
+				return []
 
 		doc = frappe.get_doc("Menu Management", menu_name)
 		
 		if not doc.is_active:
-			return [] if menu_type == "Footer" else [{"label": "Home", "page_url": "#/"}]
+			return []
 			
-		tree = [] if menu_type == "Footer" else [{"label": "Home", "page_url": "#/", "children": []}]
+		tree = []
 		
 		nodes = {
 			item.label: {
@@ -135,19 +136,30 @@ def get_menu_tree(menu_name=None, menu_type=None):
 				"menu_items": tree,
 				"left_side_content": doc.left_side_content or "",
 				"right_side_content": doc.right_side_content or "",
-				"css": doc.css or ""
+				"css": doc.css or "",
+				"top_bar": doc.top_bar or "",
+				"top_bar_css": doc.top_bar_css or ""
 			}
 
-		return tree
+		return {
+			"menu_items": tree,
+			"top_bar": doc.top_bar or "",
+			"top_bar_css": doc.top_bar_css or ""
+		}
 	except frappe.DoesNotExistError:
-		return [] if menu_type == "Footer" else [{"label": "Home", "page_url": "#/"}]
+		return {"menu_items": []}
 	except Exception as e:
 		frappe.log_error(title="Menu Tree Fetch Error", message=frappe.get_traceback())
-		return [] if menu_type == "Footer" else [{"label": "Home", "page_url": "#/"}]
+		return {"menu_items": []}
 
 @frappe.whitelist(allow_guest=True)
-def get_active_slider():
+def get_active_slider(name=None):
 	try:
+		if name:
+			if frappe.db.exists("Banner Slider", name):
+				return frappe.get_doc("Banner Slider", name).as_dict()
+			return None
+			
 		active_slider = frappe.get_all("Banner Slider", filters={"is_active": 1}, limit=1)
 		if active_slider:
 			return frappe.get_doc("Banner Slider", active_slider[0].name).as_dict()
