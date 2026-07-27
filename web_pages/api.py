@@ -17,24 +17,62 @@ def fully_unescape(text: str) -> str:
 		text = new_text
 	return text
 
+def get_web_page_name(identifier):
+	matched = frappe.get_all("Custom Web Page", filters={"route": identifier}, fields=["name"], limit=1)
+	if matched:
+		return matched[0].name
+
+	if frappe.db.exists("Custom Web Page", identifier):
+		return identifier
+
+	all_pages = frappe.get_all("Custom Web Page", fields=["name"])
+	for page in all_pages:
+		if slugify(page.name) == identifier:
+			return page.name
+
+	return None
+
+def get_sort_key(item):
+	sort_order = item.sort_order or 0
+	return (sort_order, item.idx)
+
+def format_tabs(tabs):
+	sorted_tabs = sorted(tabs, key=get_sort_key)
+	return [{
+		"page_title": tab.page_title,
+		"tab_type": tab.tab_type or "Horizontal",
+		"group_name": tab.group_name,
+		"sort_order": tab.sort_order or 0,
+		"image": tab.image,
+		"video_url": tab.video_url,
+		"content": fully_unescape(tab.content),
+		"css": tab.css,
+	} for tab in sorted_tabs]
+
+def format_sections(sections):
+	sorted_sections = sorted(sections or [], key=get_sort_key)
+	return [{
+		"page_title": sec.page_title,
+		"image": sec.image,
+		"video_url": sec.video_url,
+		"sort_order": sec.sort_order or 0,
+		"content": fully_unescape(sec.content),
+		"css": sec.css,
+		"js": fully_unescape(sec.js or "")
+	} for sec in sorted_sections]
+
 @frappe.whitelist(allow_guest=True)
 def get_custom_web_pages(name=None):
 	try:
 		if not name:
 			return frappe.get_all("Custom Web Page", fields=["name", "title", "route"])
 
-		matched_route = frappe.get_all("Custom Web Page", filters={"route": name}, fields=["name"], limit=1)
-		if matched_route:
-			name = matched_route[0].name
-		elif not frappe.db.exists("Custom Web Page", name):
-			matched = frappe.get_all("Custom Web Page", fields=["name"])
-			name = next((p.name for p in matched if slugify(p.name) == name), None)
-			if not name:
-				return {}
-		doc = frappe.get_doc("Custom Web Page", name)
-		sorted_tabs = sorted(doc.tabs, key=lambda t: (t.sort_order or 0, t.idx))
-		sorted_sections = sorted(doc.section or [], key=lambda s: (s.sort_order or 0, s.idx))
-		
+		doc_name = get_web_page_name(name)
+		if not doc_name:
+			return {}
+
+		doc = frappe.get_doc("Custom Web Page", doc_name)
+
 		return {
 			"name": doc.name,
 			"title": doc.title,
@@ -43,24 +81,8 @@ def get_custom_web_pages(name=None):
 			"image": doc.image,
 			"content": fully_unescape(doc.content),
 			"css": fully_unescape(doc.css),
-			"tabs": [{
-				"page_title": tab.page_title,
-				"tab_type": tab.tab_type or "Horizontal",
-				"group_name": tab.group_name,
-				"sort_order": tab.sort_order or 0,
-				"video_url": tab.video_url,
-				"content": fully_unescape(tab.content),
-				"css": tab.css,
-			} for tab in sorted_tabs],
-			"sections": [{
-				"page_title": sec.page_title,
-				"image": sec.image,
-				"video_url": sec.video_url,
-				"sort_order": sec.sort_order or 0,
-				"content": fully_unescape(sec.content),
-				"css": sec.css,
-				"js": fully_unescape(sec.js or "")
-			} for sec in sorted_sections]
+			"tabs": format_tabs(doc.tabs),
+			"sections": format_sections(doc.section)
 		}
 	except Exception as e:
 		frappe.log_error(title="Custom Web Page Fetch Error", message=frappe.get_traceback())

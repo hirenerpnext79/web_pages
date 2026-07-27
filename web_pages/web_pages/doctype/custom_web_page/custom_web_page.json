@@ -64,13 +64,13 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Route",
-   "reqd": 1,
+   "read_only": 1,
    "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-25 18:24:56.456226",
+ "modified": "2026-07-27 12:21:47.295888",
  "modified_by": "hirenerpnext79@gmail.com",
  "module": "Web Pages",
  "name": "Custom Web Page",
