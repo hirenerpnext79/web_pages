@@ -7,6 +7,8 @@
  "engine": "InnoDB",
  "field_order": [
   "title",
+  "route",
+  "banner_slider",
   "main_title",
   "image",
   "content",
@@ -57,11 +59,25 @@
    "fieldname": "css",
    "fieldtype": "Code",
    "label": "CSS"
+  },
+  {
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Route",
+   "read_only": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "banner_slider",
+   "fieldtype": "Link",
+   "label": "Banner Slider",
+   "options": "Banner Slider"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-25 12:22:35.622398",
+ "modified": "2026-07-27 14:14:26.989012",
  "modified_by": "hirenerpnext79@gmail.com",
  "module": "Web Pages",
  "name": "Custom Web Page",

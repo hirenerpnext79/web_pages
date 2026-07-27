@@ -10,6 +10,8 @@
   "menu_name",
   "menu_type",
   "is_active",
+  "top_bar",
+  "top_bar_css",
   "left_side_content",
   "right_side_content",
   "css",
@@ -61,12 +63,24 @@
    "fieldname": "css",
    "fieldtype": "Code",
    "label": "CSS"
+  },
+  {
+   "depends_on": "eval:doc.menu_type == \"Header\"",
+   "fieldname": "top_bar",
+   "fieldtype": "HTML Editor",
+   "label": "Top Bar"
+  },
+  {
+   "depends_on": "eval:doc.menu_type == \"Header\"",
+   "fieldname": "top_bar_css",
+   "fieldtype": "Code",
+   "label": "Top Bar CSS"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-25 12:19:22.261543",
+ "modified": "2026-07-27 12:50:00.430196",
  "modified_by": "hirenerpnext79@gmail.com",
  "module": "Web Pages",
  "name": "Menu Management",

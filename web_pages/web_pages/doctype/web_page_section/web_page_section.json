@@ -3,7 +3,6 @@
  "allow_rename": 1,
  "creation": "2026-07-23 14:46:09.292581",
  "doctype": "DocType",
- "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "page_title",
@@ -23,13 +22,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "content",
-   "fieldtype": "HTML Editor",
-   "in_list_view": 1,
-   "label": "Content",
-   "reqd": 1
-  },
-  {
    "fieldname": "css",
    "fieldtype": "Code",
    "label": "CSS"
@@ -42,7 +34,6 @@
   {
    "fieldname": "video_url",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Video Url"
   },
   {
@@ -55,13 +46,18 @@
    "fieldname": "js",
    "fieldtype": "Code",
    "label": "JS"
+  },
+  {
+   "fieldname": "content",
+   "fieldtype": "HTML Editor",
+   "label": "Content"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-07-25 13:44:46.023920",
+ "modified": "2026-07-27 13:35:36.691234",
  "modified_by": "hirenerpnext79@gmail.com",
  "module": "Web Pages",
  "name": "Web Page Section",
