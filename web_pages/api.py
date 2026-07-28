@@ -1,6 +1,7 @@
 import frappe
 import html
 import re
+from frappe.utils import cint
 
 def slugify(text: str) -> str:
 	if not text:
@@ -33,8 +34,7 @@ def get_web_page_name(identifier):
 	return None
 
 def get_sort_key(item):
-	sort_order = item.sort_order or 0
-	return (sort_order, item.idx)
+	return (cint(item.sort_order), cint(item.idx))
 
 def format_tabs(tabs):
 	sorted_tabs = sorted(tabs, key=get_sort_key)
