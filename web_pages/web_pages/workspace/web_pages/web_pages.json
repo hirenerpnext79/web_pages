@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"veBw65xujH\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Web Pages</span>\",\"col\":12}},{\"id\":\"FE5eGyT3Og\",\"type\":\"card\",\"data\":{\"card_name\":\"Web Pages\",\"col\":4}},{\"id\":\"_UAkOKBKp3\",\"type\":\"card\",\"data\":{\"card_name\":\"Menu Management\",\"col\":4}},{\"id\":\"jRyP07zn3-\",\"type\":\"card\",\"data\":{\"card_name\":\"Banner Slider\",\"col\":4}}]",
+ "content": "[{\"id\":\"veBw65xujH\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Web Pages</span>\",\"col\":12}},{\"id\":\"FE5eGyT3Og\",\"type\":\"card\",\"data\":{\"card_name\":\"Web Pages\",\"col\":4}},{\"id\":\"_UAkOKBKp3\",\"type\":\"card\",\"data\":{\"card_name\":\"Menu Management\",\"col\":4}},{\"id\":\"jRyP07zn3-\",\"type\":\"card\",\"data\":{\"card_name\":\"Banner Slider\",\"col\":4}},{\"id\":\"6u6sMLemnQ\",\"type\":\"card\",\"data\":{\"card_name\":\"Get in Touch with Us\",\"col\":4}}]",
  "creation": "2026-07-24 14:29:40.694484",
  "custom_blocks": [],
  "docstatus": 0,
@@ -68,10 +68,29 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Get in Touch with Us",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Get in Touch with Us",
+   "link_count": 0,
+   "link_to": "Get in Touch with Us",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-07-24 14:45:23.018358",
- "modified_by": "hirenerpnext79@gmail.com",
+ "modified": "2026-08-17 17:06:13.312993",
+ "modified_by": "Administrator",
  "module": "Web Pages",
  "name": "Web Pages",
  "number_cards": [],
