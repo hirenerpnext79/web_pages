@@ -7,8 +7,11 @@
  "field_order": [
   "theme_color",
   "main_title_bg",
+  "main_title_font_color",
   "tabs_color",
+  "tabs_font_color",
   "section_title_color",
+  "section_title_font_color",
   "footer_bg",
   "footer_font_color",
   "column_break_sstf",
@@ -83,13 +86,28 @@
    "fieldname": "p_color",
    "fieldtype": "Color",
    "label": "P Color"
+  },
+  {
+   "fieldname": "main_title_font_color",
+   "fieldtype": "Color",
+   "label": "Main Title Font Color"
+  },
+  {
+   "fieldname": "tabs_font_color",
+   "fieldtype": "Color",
+   "label": "Tabs Font Color"
+  },
+  {
+   "fieldname": "section_title_font_color",
+   "fieldtype": "Color",
+   "label": "Section Title Font Color"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-08-18 11:18:24.797390",
+ "modified": "2026-08-18 11:40:19.401021",
  "modified_by": "Administrator",
  "module": "Web Pages",
  "name": "Website Custom Theme",
