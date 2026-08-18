@@ -1,0 +1,114 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-08-18 10:07:58.033485",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "theme_color",
+  "main_title_bg",
+  "tabs_color",
+  "section_title_color",
+  "footer_bg",
+  "footer_font_color",
+  "column_break_sstf",
+  "h1_color",
+  "h2_color",
+  "h3_color",
+  "h4_color",
+  "h5_color",
+  "p_color"
+ ],
+ "fields": [
+  {
+   "fieldname": "main_title_bg",
+   "fieldtype": "Color",
+   "label": "Main Title BG"
+  },
+  {
+   "fieldname": "tabs_color",
+   "fieldtype": "Color",
+   "label": "Tabs Color"
+  },
+  {
+   "fieldname": "theme_color",
+   "fieldtype": "Color",
+   "label": "Theme Color"
+  },
+  {
+   "fieldname": "section_title_color",
+   "fieldtype": "Color",
+   "label": "Section Title Color"
+  },
+  {
+   "fieldname": "footer_bg",
+   "fieldtype": "Color",
+   "label": "Footer BG"
+  },
+  {
+   "fieldname": "footer_font_color",
+   "fieldtype": "Color",
+   "label": "Footer Font Color"
+  },
+  {
+   "fieldname": "column_break_sstf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "h1_color",
+   "fieldtype": "Color",
+   "label": "H1 Color"
+  },
+  {
+   "fieldname": "h2_color",
+   "fieldtype": "Color",
+   "label": "H2 Color"
+  },
+  {
+   "fieldname": "h3_color",
+   "fieldtype": "Color",
+   "label": "H3 Color"
+  },
+  {
+   "fieldname": "h4_color",
+   "fieldtype": "Color",
+   "label": "H4 Color"
+  },
+  {
+   "fieldname": "h5_color",
+   "fieldtype": "Color",
+   "label": "H5 Color"
+  },
+  {
+   "fieldname": "p_color",
+   "fieldtype": "Color",
+   "label": "P Color"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-08-18 11:18:24.797390",
+ "modified_by": "Administrator",
+ "module": "Web Pages",
+ "name": "Website Custom Theme",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
