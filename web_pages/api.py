@@ -61,6 +61,31 @@ def format_sections(sections):
 		"js": fully_unescape(sec.js or "")
 	} for sec in sorted_sections]
 
+def get_theme_settings():
+	if not frappe.db.exists("DocType", "Website Custom Theme"):
+		return {}
+	
+	theme = frappe.get_single("Website Custom Theme")
+	theme_color = theme.theme_color
+	
+	return {
+		"theme_color": theme_color,
+		"main_title_bg": theme_color or theme.main_title_bg,
+		"tabs_color": theme_color or theme.tabs_color,
+		"section_title_color": theme_color or theme.section_title_color,
+		"tabs_font_color": theme.tabs_font_color or "#111827",
+		"main_title_font_color": theme.main_title_font_color or "#111827",
+		"section_title_font_color": theme.section_title_font_color or "#111827",
+		"footer_bg": theme_color or theme.footer_bg,
+		"footer_font_color": theme.footer_font_color or "#ffffff",
+		"h1_color": theme.h1_color or "#111827",
+		"h2_color": theme.h2_color or "#111827",
+		"h3_color": theme.h3_color or "#111827",
+		"h4_color": theme.h4_color or "#111827",
+		"h5_color": theme.h5_color or "#111827",
+		"p_color": theme.p_color or "#111827"
+	}
+
 @frappe.whitelist(allow_guest=True)
 def get_custom_web_pages(name=None):
 	try:
@@ -83,7 +108,8 @@ def get_custom_web_pages(name=None):
 			"content": fully_unescape(doc.content),
 			"css": fully_unescape(doc.css),
 			"tabs": format_tabs(doc.tabs),
-			"sections": format_sections(doc.section)
+			"sections": format_sections(doc.section),
+			**get_theme_settings()
 		}
 	except Exception as e:
 		frappe.log_error(title="Custom Web Page Fetch Error", message=frappe.get_traceback())
@@ -138,13 +164,15 @@ def get_menu_tree(menu_name=None, menu_type=None):
 				"right_side_content": doc.right_side_content or "",
 				"css": doc.css or "",
 				"top_bar": doc.top_bar or "",
-				"top_bar_css": doc.top_bar_css or ""
+				"top_bar_css": doc.top_bar_css or "",
+				**get_theme_settings()
 			}
 
 		return {
 			"menu_items": tree,
 			"top_bar": doc.top_bar or "",
-			"top_bar_css": doc.top_bar_css or ""
+			"top_bar_css": doc.top_bar_css or "",
+			**get_theme_settings()
 		}
 	except frappe.DoesNotExistError:
 		return {"menu_items": []}
