@@ -15,25 +15,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Web Pages",
-   "link_count": 1,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Custom Web Page",
-   "link_count": 0,
-   "link_to": "Custom Web Page",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Menu Management",
    "link_count": 1,
    "link_type": "DocType",
@@ -87,9 +68,38 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Web Pages",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Custom Web Page",
+   "link_count": 0,
+   "link_to": "Custom Web Page",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Website Custom Theme",
+   "link_count": 0,
+   "link_to": "Website Custom Theme",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-08-17 17:06:13.312993",
+ "modified": "2026-08-18 11:24:18.327927",
  "modified_by": "Administrator",
  "module": "Web Pages",
  "name": "Web Pages",
